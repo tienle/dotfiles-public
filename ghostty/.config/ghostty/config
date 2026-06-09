@@ -33,7 +33,8 @@ background-opacity = 1.0
 mouse-hide-while-typing = true
 copy-on-select = clipboard
 clipboard-trim-trailing-spaces = true
-confirm-close-surface = false          # tmux keeps your sessions safe
+# tmux keeps your sessions safe, so skip the close confirmation
+confirm-close-surface = false
 window-inherit-working-directory = true
 
 # ── Shell integration: cwd reporting + prompt marks (cursor handled above) ──
