@@ -1,0 +1,25 @@
+# github_dark_tritanopia — exact palette pulled from the github-theme Neovim
+# plugin (terminal_color_0..15 + Normal/Cursor/Visual). Note: under tritanopia
+# "green" (2/10) is rendered blue by design, matching the editor.
+palette = 0=#0d1117
+palette = 1=#ff7b72
+palette = 2=#58a6ff
+palette = 3=#d29922
+palette = 4=#58a6ff
+palette = 5=#bc8cff
+palette = 6=#76e3ea
+palette = 7=#b1bac4
+palette = 8=#161b22
+palette = 9=#ffa198
+palette = 10=#79c0ff
+palette = 11=#e3b341
+palette = 12=#79c0ff
+palette = 13=#d2a8ff
+palette = 14=#b3f0ff
+palette = 15=#b1bac4
+background = #0d1117
+foreground = #c9d1d9
+cursor-color = #c9d1d9
+cursor-text = #0d1117
+selection-background = #243e5d
+selection-foreground = #c9d1d9
