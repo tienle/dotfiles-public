@@ -1,0 +1,5 @@
+git:
+  pagers:
+    - colorArg: always
+      # delta: syntax-highlighted code on green/red line backgrounds (Claude-Code-style diff)
+      pager: 'delta --dark --paging=never --line-numbers --plus-style="syntax #14431f" --plus-emph-style="syntax #1a7f37" --minus-style="syntax #5c1a1f" --minus-emph-style="syntax #b62324"'
