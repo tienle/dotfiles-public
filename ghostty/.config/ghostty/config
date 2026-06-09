@@ -7,10 +7,13 @@ theme = github_dark_tritanopia
 
 # ── Font: JetBrains Mono ships with Ghostty; Nerd Font icons via auto-fallback ──
 font-family = JetBrains Mono
-font-size = 14
-font-thicken = true
+font-size = 13
+# font-thicken = true
 # Dislike ligatures? uncomment:
 # font-feature = -calt,-liga,-dlig
+
+# ── Legibility: lift any text below this text/bg contrast ratio (1.0 = off) ──
+minimum-contrast = 1.2
 
 # ── Cursor: solid block, no blink (calm) ──
 cursor-style = block

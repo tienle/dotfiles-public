@@ -18,7 +18,8 @@ palette = 13=#d2a8ff
 palette = 14=#b3f0ff
 palette = 15=#b1bac4
 background = #0d1117
-foreground = #c9d1d9
+# foreground brightened from the editor's #c9d1d9 for crisper text
+foreground = #e6edf3
 cursor-color = #c9d1d9
 cursor-text = #0d1117
 selection-background = #243e5d
