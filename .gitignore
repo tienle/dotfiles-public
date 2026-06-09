@@ -1,7 +1,2 @@
-# keep lazy-lock.json tracked (pins plugin versions)
-*.bak
-*.bak.*
-tags
-spell/
-# stray nvim backup/undo dir (never belongs in the config repo)
-backups/
+# macOS
+.DS_Store
