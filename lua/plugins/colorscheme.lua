@@ -1,51 +1,31 @@
 return {
-  -- GitHub Theme (most authentic GitHub look)
+  -- GitHub theme. setup() registers the github_* colorschemes; the actual
+  -- `:colorscheme` is applied exactly ONCE by LazyVim via opts.colorscheme
+  -- below — no more two-files-fighting double-set.
   {
     "projekt0n/github-nvim-theme",
+    name = "github-theme",
     lazy = false,
     priority = 1000,
-    config = function()
-      require("github-theme").setup({
-        options = {
-          -- Choose from: 'github_dark', 'github_dark_default', 'github_dark_dimmed',
-          -- 'github_dark_high_contrast', 'github_dark_colorblind', 'github_dark_tritanopia',
-          -- 'github_light', 'github_light_default', 'github_light_high_contrast',
-          -- 'github_light_colorblind', 'github_light_tritanopia'
-          styles = {
-            comments = "italic",
-            keywords = "bold",
-            functions = "NONE",
-            variables = "NONE",
-          },
-          darken = {
-            floats = true,
-            sidebars = {
-              enable = true,
-              list = { "qf", "vista_kind", "terminal", "packer" },
-            },
-          },
+    opts = {
+      options = {
+        styles = {
+          comments = "italic",
+          keywords = "bold",
+          functions = "NONE",
+          variables = "NONE",
         },
-      })
-      -- Set to GitHub light theme (like GitHub.com)
-      vim.cmd("colorscheme github_light")
+        darken = {
+          floats = true,
+          sidebars = { enable = true, list = { "qf", "terminal" } },
+        },
+      },
+    },
+    config = function(_, opts)
+      require("github-theme").setup(opts)
     end,
   },
 
-  -- GitHub VSCode theme port
-  {
-    "Mofiqul/vscode.nvim",
-    lazy = true,
-    config = function()
-      require("vscode").setup({
-        style = "light", -- "light" or "dark"
-        transparent = false,
-        italic_comments = true,
-      })
-    end,
-  },
-
-  -- Alternative themes (lazy loaded)
-  { "joshdick/onedark.vim",        lazy = true },
-  { "sickill/vim-monokai",         lazy = true },
-  { "andreypopp/vim-colors-plain", lazy = true },
+  -- Single source of truth for the active scheme.
+  { "LazyVim/LazyVim", opts = { colorscheme = "github_dark_tritanopia" } },
 }

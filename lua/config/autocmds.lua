@@ -1,64 +1,33 @@
-local augroup = vim.api.nvim_create_augroup("MyAutoCommands", { clear = true })
+-- Loaded automatically by LazyVim. LazyVim already provides: restore cursor
+-- position, highlight on yank, auto-create dirs on save, close-with-q for help/
+-- qf/etc, wrap+spell for text filetypes, and more. Only our additions here.
+local augroup = vim.api.nvim_create_augroup("user_autocmds", { clear = true })
 
--- Remember last location in file
-vim.api.nvim_create_autocmd("BufReadPost", {
+-- ── Agent-friendly: reload buffers edited on disk by external tools ──────────
+-- Pairs with `autoread`. checktime triggers FileChangedShell* and reloads if
+-- the buffer is unmodified, so Claude Code edits in tmux show up instantly.
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermClose", "TermLeave" }, {
   group = augroup,
-  pattern = "*",
+  desc = "Check for external file changes",
   callback = function()
-    if vim.bo.filetype ~= "gitcommit" and vim.fn.line("'\"") > 0 and vim.fn.line("'\"") <= vim.fn.line("$") then
-      vim.cmd("normal! g`\"")
+    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+      vim.cmd("checktime")
     end
   end,
-  desc = "Remember cursor position",
 })
 
--- Set Ruby filetype
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = augroup,
+  desc = "Notify when a buffer was reloaded from disk",
+  callback = function()
+    vim.notify("File changed on disk — buffer reloaded", vim.log.levels.WARN, { title = "autoread" })
+  end,
+})
+
+-- ── Ruby filetype detection for Rails-y files without .rb extension ──────────
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   group = augroup,
-  pattern = { "Gemfile", "Rakefile", "Thorfile", "config.ru", "Vagrantfile", "Guardfile", "Capfile" },
-  command = "set ft=ruby",
-  desc = "Set Ruby filetype for Ruby files",
-})
-
--- Reload config on save
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = augroup,
-  pattern = { "init.lua", "*/lua/config/*.lua", "*/lua/plugins/*.lua" },
-  callback = function()
-    vim.cmd("source %")
-    vim.notify("Config reloaded", vim.log.levels.INFO)
-  end,
-  desc = "Reload config on save",
-})
-
--- File-specific abbreviations
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = "reason",
-  callback = function()
-    vim.cmd("iabbrev <buffer> rer ReasonReact")
-    vim.cmd("iabbrev <buffer> tp type")
-  end,
-  desc = "Reason abbreviations",
-})
-
--- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup,
-  callback = function()
-    vim.highlight.on_yank({ timeout = 200 })
-  end,
-  desc = "Highlight yanked text",
-})
-
--- Terminal settings
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = augroup,
-  pattern = "*",
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.cmd("startinsert")
-  end,
-  desc = "Terminal settings",
+  pattern = { "Gemfile", "Rakefile", "Thorfile", "config.ru", "Vagrantfile", "Guardfile", "Capfile", "*.jbuilder", "*.god" },
+  desc = "Treat Rails-y files as Ruby",
+  command = "setfiletype ruby",
 })
