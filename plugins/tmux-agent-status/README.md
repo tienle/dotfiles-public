@@ -8,7 +8,7 @@ database: tmux holds the state, so a closed window just disappears.
 ```
                        ┌──► tmux pill        🤖 working / 💬 waiting / ✅ done   (tmux/.tmux.conf)
   hooks set @agent ────┼──► Telegram         ping when a BACKGROUND agent finishes / needs input
-   = the ONE writer    └──► dashboard        prefix+A: live fzf list of every agent, enter = jump
+   = the ONE writer    └──► dashboard        prefix+A: agents grouped by state (💬→🤖→✅), enter = jump
                             ▲
          "tmux IS the database" — liveness is free, nothing to clean up
 ```
@@ -20,7 +20,7 @@ database: tmux holds the state, so a closed window just disappears.
 | Hooks | this plugin (`hooks/hooks.json` → `scripts/tmux-agent.sh`) | set `@agent` on UserPromptSubmit/PostToolUse (working), Notification permission/elicitation (wait), Stop (done) |
 | Pill | `tmux/.tmux.conf` (`window-status-format`) | renders `@agent` as 🤖/💬/✅; `pane-focus-in` clears wait/done on the focused window |
 | Telegram | this plugin (`scripts/notify-telegram.sh`) | **optional**, no-op unless configured; pings on Stop/permission for windows you're *not* watching |
-| Dashboard | `tmux/.config/tmux/agent-dashboard.sh` + `prefix+A` bind | fzf popup of every agent (state · project · branch), live-refresh, `enter` jumps to it |
+| Dashboard | `tmux/.config/tmux/agent-dashboard.sh` + `prefix+A` bind | fzf popup, agents grouped by state (💬 waiting → 🤖 working → ✅ done) with per-group counts, live-refresh, `enter` jumps to it |
 
 ## Install (any machine)
 
