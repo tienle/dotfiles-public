@@ -26,10 +26,10 @@ enumerate_raw() {
   | while IFS="$US" read -r sess win agent path; do
       [ -n "$agent" ] || continue
       case "$agent" in
-        wait)    prio=0; icon=$'\033[33m💬\033[0m' ;;
-        working) prio=1; icon=$'\033[34m🤖\033[0m' ;;
-        done)    prio=2; icon=$'\033[32m✅\033[0m' ;;
-        *)       prio=3; icon='· ' ;;
+        wait)    prio=0 ;;
+        working) prio=1 ;;
+        done)    prio=2 ;;
+        *)       prio=3 ;;
       esac
       proj="$(basename "$path")"; branch='-'; wt=' '
       if top="$(git -C "$path" rev-parse --show-toplevel 2>/dev/null)"; then
@@ -39,8 +39,10 @@ enumerate_raw() {
           */worktrees/*) wt='⑂' ;;
         esac
       fi
-      printf '%s\t%s\t%s  %-22s %s %-26s %s\n' \
-        "$prio" "$sess:$win" "$icon" "$proj" "$wt" "$branch" "$sess:$win"
+      # No per-row icon — the group header carries the state icon; rows indent
+      # under it. field 1=prio (sort), 2=jump target, 3=display.
+      printf '%s\t%s\t  %-22s %s %-26s %s\n' \
+        "$prio" "$sess:$win" "$proj" "$wt" "$branch" "$sess:$win"
     done
 }
 
@@ -70,16 +72,19 @@ esac
 #     background, so the UI stays responsive (a sleep inside transform/reload-sync
 #     would block fzf's input — that was the freeze). On completion it fires
 #     'load' again => a ~1s self-refreshing loop.
-#   - scrolling the preview (shift-↑/↓ or mouse wheel) runs unbind(load), which
-#     stops the loop so your scroll position holds while you read.
+#   - typing in the search OR scrolling the preview (shift-↑/↓ or mouse wheel)
+#     runs unbind(load), stopping the loop so interaction stays instant and your
+#     scroll holds. (A perpetual reload keeps fzf 'reloading', which throttles
+#     filtering/typing to the ~1s cadence — that was the lag.)
 #   - ctrl-r rebinds load + reloads => resumes live. Reopening also starts live.
 sel="$("$self" --rows | fzf --ansi --delimiter=$'\t' \
   --with-nth=2.. --accept-nth=1 \
   --no-sort --reverse --cycle \
-  --header='enter: jump  ·  shift-↑/↓ or wheel: read (pauses)  ·  ctrl-r: refresh+resume  ·  esc: close' \
+  --header='enter: jump  ·  type/scroll: pause+read  ·  ctrl-r: refresh+resume  ·  esc: close' \
   --preview 'tmux capture-pane -ep -t {1} 2>/dev/null | tail -n 50' \
   --preview-window='down,45%,wrap' \
   --bind "load:reload(sleep 1; $self --rows)" \
+  --bind 'change:unbind(load)' \
   --bind 'shift-up:preview-up+unbind(load)' \
   --bind 'shift-down:preview-down+unbind(load)' \
   --bind 'preview-scroll-up:preview-up+unbind(load)' \
