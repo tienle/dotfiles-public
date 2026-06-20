@@ -65,31 +65,26 @@ case "${1:-}" in
   --plain) emit_rows | sed $'s/\t/  /'; exit 0 ;;   # for a `watch`-based fallback
 esac
 
-# Live auto-refresh that PAUSES the moment you scroll the preview to read.
-# How it works:
-#   - a self-rescheduling 'load' loop sleeps 1s, then reloads the list — but only
-#     if the pause flag is ABSENT (checked AFTER the sleep, so scrolling cancels
-#     the very next reload: no stray reset).
-#   - scrolling the preview (shift-↑/↓ or mouse wheel) touches the flag, so the
-#     next tick skips its reload and the loop goes idle -> your scroll freezes.
-#   - ctrl-r clears the flag and reloads -> resumes live. Reopening also starts live.
-# (fzf re-renders the preview on every reload, so pausing the reload is the only
-# way to keep a scrolled preview still.)
-PAUSE="${TMPDIR:-/tmp}/agent-dash-pause.$$"
-rm -f "$PAUSE"; trap 'rm -f "$PAUSE"' EXIT
-
+# Live auto-refresh that PAUSES when you scroll the preview to read.
+#   - 'load:reload(sleep 1; …)' is an ASYNC reload: the 1s sleep runs in the
+#     background, so the UI stays responsive (a sleep inside transform/reload-sync
+#     would block fzf's input — that was the freeze). On completion it fires
+#     'load' again => a ~1s self-refreshing loop.
+#   - scrolling the preview (shift-↑/↓ or mouse wheel) runs unbind(load), which
+#     stops the loop so your scroll position holds while you read.
+#   - ctrl-r rebinds load + reloads => resumes live. Reopening also starts live.
 sel="$("$self" --rows | fzf --ansi --delimiter=$'\t' \
   --with-nth=2.. --accept-nth=1 \
   --no-sort --reverse --cycle \
   --header='enter: jump  ·  shift-↑/↓ or wheel: read (pauses)  ·  ctrl-r: refresh+resume  ·  esc: close' \
   --preview 'tmux capture-pane -ep -t {1} 2>/dev/null | tail -n 50' \
   --preview-window='down,45%,wrap' \
-  --bind "load:transform:sleep 1; [ -e $PAUSE ] || echo 'reload-sync($self --rows)'" \
-  --bind "shift-up:preview-up+execute-silent(touch $PAUSE)" \
-  --bind "shift-down:preview-down+execute-silent(touch $PAUSE)" \
-  --bind "preview-scroll-up:preview-up+execute-silent(touch $PAUSE)" \
-  --bind "preview-scroll-down:preview-down+execute-silent(touch $PAUSE)" \
-  --bind "ctrl-r:execute-silent(rm -f $PAUSE)+reload($self --rows)")" || exit 0
+  --bind "load:reload(sleep 1; $self --rows)" \
+  --bind 'shift-up:preview-up+unbind(load)' \
+  --bind 'shift-down:preview-down+unbind(load)' \
+  --bind 'preview-scroll-up:preview-up+unbind(load)' \
+  --bind 'preview-scroll-down:preview-down+unbind(load)' \
+  --bind "ctrl-r:rebind(load)+reload($self --rows)")" || exit 0
 
 [ -n "$sel" ] || exit 0          # header rows have an empty target -> no-op
 tmux switch-client -t "${sel%%:*}" 2>/dev/null
