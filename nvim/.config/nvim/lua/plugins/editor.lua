@@ -63,4 +63,15 @@ return {
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Gblame", "Gedit", "Glog" },
   },
+
+  -- fzf-lua: restore C-u = "clear the query box". LazyVim's fzf extra rebinds
+  -- C-u to half-page-up (scroll results), which clobbers fzf's default
+  -- unix-line-discard. This opts() runs after the extra's, so it wins.
+  -- clear-query wipes the whole prompt regardless of cursor position.
+  {
+    "ibhagwan/fzf-lua",
+    opts = function()
+      require("fzf-lua").config.defaults.keymap.fzf["ctrl-u"] = "clear-query"
+    end,
+  },
 }
