@@ -7,3 +7,8 @@
 **/.claude/settings.local.json
 **/.claude.json
 .claude.json
+
+# Telegram bot token for the agent notifier. The real file lives at
+# ~/.config/claude/telegram.env (outside this repo); never track one if a copy
+# ever lands in the tree. The committed telegram.env.example (placeholders) is fine.
+**/telegram.env

@@ -1,7 +1,7 @@
 {
   "name": "tmux-agent-status",
-  "description": "Coding-agent status in the tmux window pill: 🤖 working, 💬 waiting for input, ✅ finished. Hooks set a per-window @agent tmux option that ~/.tmux.conf renders. Pairs with the window-status-format in this repo's tmux/.tmux.conf.",
-  "version": "0.1.0",
+  "description": "Coding-agent status for tmux: hooks set a per-window @agent option (working/wait/done) that ~/.tmux.conf renders as 🤖/💬/✅, optionally ping Telegram when a background agent finishes or needs input, and feed an fzf dashboard popup. See README.md.",
+  "version": "0.2.0",
   "author": {
     "name": "Tien Le"
   }
