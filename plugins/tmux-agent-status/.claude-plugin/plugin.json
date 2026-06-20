@@ -1,0 +1,8 @@
+{
+  "name": "tmux-agent-status",
+  "description": "Coding-agent status in the tmux window pill: 🤖 working, 💬 waiting for input, ✅ finished. Hooks set a per-window @agent tmux option that ~/.tmux.conf renders. Pairs with the window-status-format in this repo's tmux/.tmux.conf.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Tien Le"
+  }
+}

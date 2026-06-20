@@ -1,0 +1,13 @@
+{
+  "name": "tienle-dotfiles",
+  "owner": {
+    "name": "Tien Le"
+  },
+  "plugins": [
+    {
+      "name": "tmux-agent-status",
+      "source": "./plugins/tmux-agent-status",
+      "description": "Show coding-agent state (🤖 working / 💬 waiting / ✅ done) in the tmux window pill"
+    }
+  ]
+}
