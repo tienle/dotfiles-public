@@ -65,14 +65,19 @@ case "${1:-}" in
   --plain) emit_rows | sed $'s/\t/  /'; exit 0 ;;   # for a `watch`-based fallback
 esac
 
+# Preview renders only on start + focus (navigation), via change-preview — NOT
+# on the 1s list reload. So the list stays live while your manual preview scroll
+# is preserved (the reload fires 'result'/'load', not 'focus'). ctrl-r force-
+# refreshes both list and preview.
 sel="$("$self" --rows | fzf --ansi --delimiter=$'\t' \
   --with-nth=2.. --accept-nth=1 \
   --no-sort --reverse --cycle \
   --header='enter: jump   ·   ctrl-r: refresh   ·   esc: close' \
-  --preview 'tmux capture-pane -ep -t {1} 2>/dev/null | tail -n 50' \
   --preview-window='down,45%,wrap' \
+  --bind 'start:change-preview(tmux capture-pane -ep -t {1} 2>/dev/null | tail -n 50)' \
+  --bind 'focus:change-preview(tmux capture-pane -ep -t {1} 2>/dev/null | tail -n 50)' \
   --bind "load:reload-sync(sleep 1; \"$self\" --rows)" \
-  --bind "ctrl-r:reload(\"$self\" --rows)")" || exit 0
+  --bind "ctrl-r:reload(\"$self\" --rows)+refresh-preview")" || exit 0
 
 [ -n "$sel" ] || exit 0          # header rows have an empty target -> no-op
 tmux switch-client -t "${sel%%:*}" 2>/dev/null
