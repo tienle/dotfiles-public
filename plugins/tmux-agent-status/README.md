@@ -18,7 +18,7 @@ database: tmux holds the state, so a closed window just disappears.
 | Piece | Lives in | What it does |
 |-------|----------|--------------|
 | Hooks | this plugin (`hooks/hooks.json` → `scripts/tmux-agent.sh`) | set `@agent` on UserPromptSubmit/PostToolUse (working), Notification permission/elicitation (wait), Stop (done) |
-| Pill | `tmux/.tmux.conf` (`window-status-format`) | renders `@agent` as 🤖/💬/✅; `pane-focus-in` clears wait/done on the focused window |
+| Pill | `tmux/.tmux.conf` (`window-status-format`) | renders `@agent` as 🤖/💬/✅; the window you're ON omits 💬/✅ via `current-format` (no nag) but `@agent` is never erased, so state persists for the dashboard |
 | Telegram | this plugin (`scripts/notify-telegram.sh`) | **optional**, no-op unless configured; pings on Stop/permission for windows you're *not* watching |
 | Dashboard | `tmux/.config/tmux/agent-dashboard.sh` + `prefix+A` bind | fzf popup, agents grouped by state (💬 waiting → 🤖 working → ✅ done) with per-group counts, live-refresh, `enter` jumps to it |
 

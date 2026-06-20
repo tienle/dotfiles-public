@@ -8,8 +8,8 @@
 # Use from a tmux popup (see bind in .tmux.conf):
 #   bind A display-popup -E -w 80% -h 80% "~/.config/tmux/agent-dashboard.sh"
 #
-# Note: your pane-focus-in hook clears @agent (wait/done) on the focused window,
-# so the dashboard shows the OTHER agents that need you, not the one you're on.
+# @agent holds the true state and is never cleared on focus, so every agent
+# (working / waiting / done-or-idle) shows here until its state actually changes.
 set -u
 
 # Resolve this script's real path so fzf's reload binding can re-invoke it.
