@@ -1,2 +1,9 @@
 # macOS
 .DS_Store
+
+# Claude Code config — NEVER track. These can hold OAuth tokens, API keys,
+# and other sensitive data (.claude.json carries account credentials).
+**/.claude/settings.json
+**/.claude/settings.local.json
+**/.claude.json
+.claude.json
