@@ -15,10 +15,19 @@ repo also doubles as a [Claude Code plugin marketplace](#claude-code-agent-statu
 | `tmux/`    | `~/.tmux.conf`, `~/.config/tmux/` | tmux (+ agent-dashboard script)       |
 | `wezterm/` | `~/.wezterm.lua`                  | WezTerm                               |
 | `claude/`  | `~/.claude/CLAUDE.md`             | Claude Code global instructions       |
+| `zsh/`     | `~/.config/zsh/`                  | Shared shell helpers (`ta`, `ccode`) ‡ |
 
 † lazygit on macOS reads `~/Library/Application Support/lazygit` by default. Set
 `export XDG_CONFIG_HOME="$HOME/.config"` in `~/.zshrc` so it uses the stowed
 `~/.config/lazygit` instead. Requires `git-delta` (`brew install git-delta`).
+
+‡ Only safe, non-secret helpers live here — `~/.zshrc` itself is **not** tracked
+(it holds machine/account-specific config and secrets). Source the shared file
+from `~/.zshrc` once per machine:
+`[ -f ~/.config/zsh/aliases.zsh ] && source ~/.config/zsh/aliases.zsh`
+(`ta` = quick `tmux attach`, handy from a phone; `ccode` = Claude in the
+`~/.claude-tl` profile.) Per-machine secrets/env go in `~/.zsh.local` — it's
+auto-sourced by `aliases.zsh`, lives outside the repo, and is gitignored.
 
 ## Install
 
@@ -32,11 +41,14 @@ for f in .config/nvim .config/ghostty .config/tmux .tmux.conf .wezterm.lua .clau
 done
 
 # Symlink everything into place:
-stow -t ~ nvim ghostty lazygit tmux wezterm claude
+stow -t ~ nvim ghostty lazygit tmux wezterm claude zsh
 ```
 
+For `zsh`, also add this to `~/.zshrc` (it's not tracked — see the ‡ note):
+`[ -f ~/.config/zsh/aliases.zsh ] && source ~/.config/zsh/aliases.zsh`
+
 Stow one package only: `stow -t ~ nvim`
-Remove symlinks: `stow -D -t ~ nvim ghostty lazygit tmux wezterm claude`
+Remove symlinks: `stow -D -t ~ nvim ghostty lazygit tmux wezterm claude zsh`
 Re-sync after adding files: `stow -R -t ~ tmux`
 
 ## Claude Code: agent status

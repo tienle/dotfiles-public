@@ -12,3 +12,10 @@
 # ~/.config/claude/telegram.env (outside this repo); never track one if a copy
 # ever lands in the tree. The committed telegram.env.example (placeholders) is fine.
 **/telegram.env
+
+# Machine-local shell config — may hold secrets, never track. The real one is
+# ~/.zsh.local (in $HOME, outside this repo); these rules also defend the stowed
+# zsh dir in case a local/secret file is ever dropped there.
+**/.zsh.local
+zsh/.config/zsh/*.local.zsh
+zsh/.config/zsh/secrets.zsh
