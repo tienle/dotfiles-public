@@ -47,6 +47,16 @@ stow -t ~ nvim ghostty lazygit tmux wezterm claude zsh
 For `zsh`, also add this to `~/.zshrc` (it's not tracked — see the ‡ note):
 `[ -f ~/.config/zsh/aliases.zsh ] && source ~/.config/zsh/aliases.zsh`
 
+For `tmux`, install [TPM](https://github.com/tmux-plugins/tpm) — the plugin
+manager isn't tracked, and without it no plugins load (so the pane-control
+keys like `C-a |` / `C-a -` / `C-a h/j/k/l` are silently missing):
+
+```sh
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# then inside tmux: C-a I   (capital i) to install the plugins
+# or headless:  tmux source ~/.tmux.conf && ~/.tmux/plugins/tpm/bin/install_plugins
+```
+
 Stow one package only: `stow -t ~ nvim`
 Remove symlinks: `stow -D -t ~ nvim ghostty lazygit tmux wezterm claude zsh`
 Re-sync after adding files: `stow -R -t ~ tmux`
